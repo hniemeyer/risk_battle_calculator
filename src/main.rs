@@ -9,6 +9,8 @@ fn roll_die(times: usize) -> Vec<i32> {
     roll_die.take(times).collect()
 }
 
+//TODO: average rounds, parallel simulation, printing depending on number of threads, calculate execution time
+
 fn main() {
     let number_of_simulations = 50000;
     let mut attacker_wins = 0;
