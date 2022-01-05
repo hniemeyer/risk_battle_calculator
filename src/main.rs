@@ -35,7 +35,7 @@ fn roll_die(times: usize) -> Vec<i32> {
     roll_die.take(times).collect()
 }
 
-//TODO: average rounds, parallel simulation, calculate execution time
+//TODO: average rounds, calculate execution time
 
 fn main() {
     let args = Args::parse();
