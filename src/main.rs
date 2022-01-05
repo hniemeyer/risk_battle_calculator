@@ -57,8 +57,23 @@ fn main() {
         }
         let mut attacker_armies = input_attacker_armies;
         let mut defender_armies = input_defender_armies;
-        while attacker_armies >= cancel_attack_threshold && defender_armies > 0 {
-            if attacker_armies == 1 {
+        loop {
+            if attacker_armies == 1
+                || (attacker_armies <= cancel_attack_threshold && defender_armies > 0)
+            {
+                if do_logging {
+                    println!(
+                        "defender won because attacker has {} armies which is equal or below {}",
+                        attacker_armies, cancel_attack_threshold
+                    );
+                }
+                defender_wins += 1;
+                break;
+            } else if defender_armies == 0 {
+                if do_logging {
+                    println!("attacker won");
+                }
+                attacker_wins += 1;
                 break;
             }
             if do_logging {
@@ -104,23 +119,9 @@ fn main() {
                 );
             }
         }
-        if do_logging {
-            println!("--------------------");
-        }
-        if attacker_armies <= cancel_attack_threshold && defender_armies > 0 {
-            if do_logging {
-                println!(
-                    "defender won because attacker has {} armies which is equal or below {}",
-                    attacker_armies, cancel_attack_threshold
-                )
-            };
-            defender_wins += 1;
-        } else {
-            if do_logging {
-                println!("attacker won");
-            }
-            attacker_wins += 1;
-        }
+    }
+    if do_logging {
+        println!("--------------------");
     }
     println!(
         "Out of {} games, the attacker won {} times and the defender {} times if the atacker has {} and the defender {} armies and the attacker cancels <= {} armies",
