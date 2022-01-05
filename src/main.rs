@@ -58,6 +58,9 @@ fn main() {
         let mut attacker_armies = input_attacker_armies;
         let mut defender_armies = input_defender_armies;
         while attacker_armies >= cancel_attack_threshold && defender_armies > 0 {
+            if attacker_armies == 1 {
+                break;
+            }
             if do_logging {
                 println!("--------------------");
             }
@@ -84,8 +87,14 @@ fn main() {
                 }
                 if (defender_roll - attacker_roll) >= 0 {
                     attacker_armies -= 1;
+                    if do_logging {
+                        println!("Attacker loses an army.")
+                    }
                 } else {
                     defender_armies -= 1;
+                    if do_logging {
+                        println!("Defender loses an army.")
+                    }
                 }
             }
             if do_logging {
@@ -114,8 +123,8 @@ fn main() {
         }
     }
     println!(
-        "Out of {} games, the attacker won {} times and the defender {} times if the atacker has {} and the defender {} armies",
-        number_of_simulations, attacker_wins, defender_wins, input_attacker_armies, input_defender_armies
+        "Out of {} games, the attacker won {} times and the defender {} times if the atacker has {} and the defender {} armies and the attacker cancels <= {} armies",
+        number_of_simulations, attacker_wins, defender_wins, input_attacker_armies, input_defender_armies, cancel_attack_threshold
     );
     let win_chance_attacker = (attacker_wins as f64) / (number_of_simulations as f64) * 100.0;
     println!("Win chance of attacker: {} percent", win_chance_attacker);
