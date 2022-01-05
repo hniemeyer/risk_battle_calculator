@@ -9,7 +9,7 @@ fn roll_die(times: usize) -> Vec<i32> {
     roll_die.take(times).collect()
 }
 
-//TODO: average rounds, parallel simulation, printing depending on number of threads, calculate execution time
+//TODO: average rounds, parallel simulation, calculate execution time
 
 fn main() {
     let do_logging = false;
