@@ -19,6 +19,10 @@ struct Args {
     #[clap(short, long, default_value_t = 50000)]
     number_of_simulations: usize,
 
+    /// Cancel the attack if the attacker has fewer or equal than this number of armies
+    #[clap(short, long, default_value_t = 1)]
+    cancel_attack: usize,
+
     /// Print detailed battle statistics to the screen. Will be deactivated for large number of simulations.
     #[clap(short, long)]
     verbose: bool,
@@ -46,13 +50,14 @@ fn main() {
     let mut defender_wins = 0;
     let input_attacker_armies = args.attacker_armies;
     let input_defender_armies = args.defender_armies;
-    for game_idx in 1..number_of_simulations {
+    let cancel_attack_threshold = args.cancel_attack;
+    for game_idx in 0..number_of_simulations {
         if do_logging {
             println!("game {}", game_idx);
         }
         let mut attacker_armies = input_attacker_armies;
         let mut defender_armies = input_defender_armies;
-        while attacker_armies > 1 && defender_armies > 0 {
+        while attacker_armies >= cancel_attack_threshold && defender_armies > 0 {
             if do_logging {
                 println!("--------------------");
             }
@@ -93,13 +98,15 @@ fn main() {
         if do_logging {
             println!("--------------------");
         }
-        if attacker_armies == 1 {
+        if attacker_armies <= cancel_attack_threshold && defender_armies > 0 {
             if do_logging {
-                println!("defender won")
+                println!(
+                    "defender won because attacker has {} armies which is equal or below {}",
+                    attacker_armies, cancel_attack_threshold
+                )
             };
             defender_wins += 1;
-        }
-        if defender_armies == 0 {
+        } else {
             if do_logging {
                 println!("attacker won");
             }
