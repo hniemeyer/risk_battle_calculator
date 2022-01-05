@@ -1,6 +1,28 @@
+use clap::Parser;
 use itertools::izip;
 use rand::distributions::Uniform;
 use rand::{thread_rng, Rng};
+
+/// Program to calculate winning odds in the risk board game.
+#[derive(Parser, Debug)]
+#[clap(about, version, author)]
+struct Args {
+    /// Number of armies the attacker has
+    #[clap(short, long, default_value_t = 12)]
+    attacker_armies: usize,
+
+    /// Number of armies the defender has
+    #[clap(short, long, default_value_t = 8)]
+    defender_armies: usize,
+
+    /// How many games will be simulated
+    #[clap(short, long, default_value_t = 50000)]
+    number_of_simulations: usize,
+
+    /// Print detailed battle statistics to the screen. Will be deactivated for large number of simulations.
+    #[clap(short, long)]
+    verbose: bool,
+}
 
 fn roll_die(times: usize) -> Vec<i32> {
     let mut rng = thread_rng();
@@ -12,12 +34,18 @@ fn roll_die(times: usize) -> Vec<i32> {
 //TODO: average rounds, parallel simulation, calculate execution time
 
 fn main() {
-    let do_logging = false;
-    let number_of_simulations = 50000;
+    let args = Args::parse();
+
+    let mut do_logging = args.verbose;
+    let number_of_simulations = args.number_of_simulations;
+    if number_of_simulations > 10 && do_logging {
+        println!("Deactivating logging due to large number of installations.");
+        do_logging = false;
+    }
     let mut attacker_wins = 0;
     let mut defender_wins = 0;
-    let input_attacker_armies = 12;
-    let input_defender_armies = 22;
+    let input_attacker_armies = args.attacker_armies;
+    let input_defender_armies = args.defender_armies;
     for game_idx in 1..number_of_simulations {
         if do_logging {
             println!("game {}", game_idx);
